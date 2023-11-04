@@ -1,25 +1,19 @@
 package com.example.twizydeliveryapp
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,13 +23,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
 import com.example.twizydeliveryapp.ui.theme.textColor
@@ -46,7 +41,7 @@ val mainMenuStroke = BorderStroke(
 )
 
 @Composable
-fun MainMenu(name: String) {
+fun MainMenu(name: String, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -54,7 +49,7 @@ fun MainMenu(name: String) {
     ) {
         MainHeader()
         Greeting(name = name)
-        MainBody()
+        MainBody(navController)
     }
 }
 
@@ -107,7 +102,7 @@ fun Greeting(name: String) {
 }
 
 @Composable
-fun MainBody() {
+fun MainBody(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -128,7 +123,7 @@ fun MainBody() {
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.Start
             ) {
-                DeliveryStatus()
+                DeliveryStatusSummary()
             }
         }
     }
@@ -139,7 +134,9 @@ fun MainBody() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Button(
-            onClick = { /**/ },
+            onClick = {
+                navController.navigate("mobilityStatus")
+            },
             modifier = Modifier
                 .weight(1f)
                 .height(160.dp)
@@ -149,7 +146,7 @@ fun MainBody() {
             contentPadding = PaddingValues(all = 16.dp),
             shape = MaterialTheme.shapes.medium
         ) {
-            MobilityStatus()
+            MobilityStatusSummary()
         }
         Button(
             onClick = { /**/ },
@@ -162,7 +159,7 @@ fun MainBody() {
             contentPadding = PaddingValues(all = 16.dp),
             shape = MaterialTheme.shapes.medium
         ) {
-            DriverStatus()
+            DriverStatusSummary()
         }
     }
     Button(
@@ -185,7 +182,7 @@ fun MainBody() {
 }
 
 @Composable
-fun DeliveryStatus() {
+fun DeliveryStatusSummary() {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
@@ -197,7 +194,7 @@ fun DeliveryStatus() {
 }
 
 @Composable
-fun MobilityStatus() {
+fun MobilityStatusSummary() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.Start
@@ -220,7 +217,7 @@ fun MobilityStatus() {
 }
 
 @Composable
-fun DriverStatus() {
+fun DriverStatusSummary() {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.Start
@@ -235,6 +232,6 @@ fun DriverStatus() {
 @Composable
 fun MainMenuPreview() {
     TwizyDeliveryAppTheme {
-        MainMenu("Android")
+        MainMenu("Android", rememberNavController())
     }
 }
