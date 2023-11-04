@@ -147,7 +147,7 @@ fun MainBody(navController: NavController) {
             MobilityStatusSummary()
         }
         Button(
-            onClick = { /**/ },
+            onClick = { navController.navigate("driverStatus") },
             modifier = Modifier
                 .weight(1f)
                 .height(160.dp)

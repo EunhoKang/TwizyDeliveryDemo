@@ -246,22 +246,3 @@ fun MobilityStatusPreview() {
         MobilityStatus(rememberNavController())
     }
 }
-
-//drawArc(
-//brush = Brush.linearGradient(
-//colors = listOf(
-//Color(0xff63C6C4), Color(0xff97CA49)
-//),
-//start = Offset.Zero,
-//end = Offset.Infinite,
-//),
-//startAngle = -90f,
-//sweepAngle = 300f,
-//useCenter = false,
-//topLeft = Offset(
-//(size.width - sizeArc.width) / 2f,
-//(size.height - sizeArc.height) / 2f
-//),
-//size = sizeArc,
-//style = Stroke(width = 40f, cap = StrokeCap.Round)
-//)

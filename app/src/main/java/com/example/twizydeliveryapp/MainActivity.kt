@@ -41,7 +41,19 @@ fun MainScreen() {
             MobilityStatus(navController)
         }
         composable("driverStatus") {
-            
+            DriverStatus(navController)
+        }
+        composable("deliveryStatus") {
+            DeliveryStatus(navController)
+        }
+        composable("deliveryStatusDetail") {
+            DeliveryStatusDetail(navController)
+        }
+        composable("deliveryNavigation") {
+            DeliveryNavigation(navController)
+        }
+        composable("deliveryList") {
+            DeliveryList(navController)
         }
     }
 }

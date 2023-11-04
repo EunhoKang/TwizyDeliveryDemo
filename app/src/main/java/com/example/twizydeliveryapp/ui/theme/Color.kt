@@ -11,6 +11,8 @@ val topAppBarColor = Color(0x00000000)
 
 val statusBlue = Color(0xFF5585FF)
 val statusBlack = Color(0xFF212529)
+val gradiantGreenFirst = Color(0xFF25EA2D)
+val gradiantGreenSecond = Color(0xFFACFFCD)
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
