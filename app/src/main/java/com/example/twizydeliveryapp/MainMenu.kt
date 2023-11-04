@@ -107,7 +107,9 @@ fun MainBody(navController: NavController) {
             .padding(top = 16.dp),
     ) {
         Button(
-            onClick = { /**/ },
+            onClick = {
+                navController.navigate("deliveryStatus")
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp)

@@ -35,7 +35,7 @@ fun MainScreen() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
-            MainMenu("Android", navController)
+            MainMenu("김배달", navController)
         }
         composable("mobilityStatus") {
             MobilityStatus(navController)
@@ -50,7 +50,7 @@ fun MainScreen() {
             DeliveryStatusDetail(navController)
         }
         composable("deliveryNavigation") {
-            DeliveryNavigation(navController)
+            DeliveryNavigation(true, navController)
         }
         composable("deliveryList") {
             DeliveryList(navController)
