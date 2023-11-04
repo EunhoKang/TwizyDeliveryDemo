@@ -28,8 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
@@ -37,7 +35,7 @@ import com.example.twizydeliveryapp.ui.theme.textColor
 
 val mainMenuStroke = BorderStroke(
     width = 1.dp,
-    color = mainmenuStrokeColor
+    color = mainMenuStrokeColor
 )
 
 @Composable
@@ -93,7 +91,7 @@ fun Greeting(name: String) {
             )
             Text(
                 text = stringResource(R.string.greeting, name),
-                fontSize = greetingTextSize,
+                fontSize = mediumText,
                 color = textColor,
                 modifier = Modifier.padding(16.dp)
             )
@@ -115,7 +113,7 @@ fun MainBody(navController: NavController) {
                 .height(100.dp)
                 .padding(horizontal = 32.dp),
             border = mainMenuStroke,
-            colors = ButtonDefaults.buttonColors(containerColor = mainmenuButtonColor),
+            colors = ButtonDefaults.buttonColors(containerColor = mainMenuButtonColor),
             contentPadding = PaddingValues(all = 16.dp),
             shape = MaterialTheme.shapes.medium
         ) {
@@ -142,7 +140,7 @@ fun MainBody(navController: NavController) {
                 .height(160.dp)
                 .padding(end = 8.dp),
             border = mainMenuStroke,
-            colors = ButtonDefaults.buttonColors(containerColor = mainmenuButtonColor),
+            colors = ButtonDefaults.buttonColors(containerColor = mainMenuButtonColor),
             contentPadding = PaddingValues(all = 16.dp),
             shape = MaterialTheme.shapes.medium
         ) {
@@ -155,7 +153,7 @@ fun MainBody(navController: NavController) {
                 .height(160.dp)
                 .padding(start = 8.dp),
             border = mainMenuStroke,
-            colors = ButtonDefaults.buttonColors(containerColor = mainmenuButtonColor),
+            colors = ButtonDefaults.buttonColors(containerColor = mainMenuButtonColor),
             contentPadding = PaddingValues(all = 16.dp),
             shape = MaterialTheme.shapes.medium
         ) {
@@ -165,7 +163,7 @@ fun MainBody(navController: NavController) {
     Button(
         onClick = { /**/ },
         border = mainMenuStroke,
-        colors = ButtonDefaults.buttonColors(containerColor = mainmenuButtonColor),
+        colors = ButtonDefaults.buttonColors(containerColor = mainMenuButtonColor),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically

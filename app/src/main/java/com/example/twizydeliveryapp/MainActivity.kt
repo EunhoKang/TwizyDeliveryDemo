@@ -40,6 +40,9 @@ fun MainScreen() {
         composable("mobilityStatus") {
             MobilityStatus(navController)
         }
+        composable("driverStatus") {
+            
+        }
     }
 }
 
