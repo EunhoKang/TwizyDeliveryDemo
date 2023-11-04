@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TwizyDeliveryApp</string>
     <string name="greeting">%1$s 기사님, 반가워요.</string>
+    <string name="mainmenu_description_notification">알림</string>
 </resources>
