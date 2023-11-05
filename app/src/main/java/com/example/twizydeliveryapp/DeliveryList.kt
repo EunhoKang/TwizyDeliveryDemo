@@ -168,19 +168,21 @@ fun DeliveryListBody(info: DeliverySetInfo) {
 fun DeliveryItemList(list: List<DeliveryInfo>) {
     LazyColumn {
         items(list.count()) {
-            DeliveryItem(list[it])
+            Row(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                DeliveryItem(list[it])
+            }
+            Divider(color = titleTextColor)
         }
     }
 }
 
 @Composable
 fun DeliveryItem(info: DeliveryInfo) {
-    Row(
-        modifier = Modifier
-            .wrapContentHeight()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -213,7 +215,6 @@ fun DeliveryItem(info: DeliveryInfo) {
             }
         }
     }
-    Divider(color = titleTextColor)
 }
 
 

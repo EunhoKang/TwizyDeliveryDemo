@@ -149,13 +149,16 @@ fun DeliverySetList(viewModel: DeliveryViewModel, navController: NavController) 
     val lists = viewModel.deliverySets.collectAsState()
     LazyColumn(contentPadding = PaddingValues(16.dp, 8.dp)) {
         items(lists.value[state.value].count()) {
-            DeliverySetItemButton(lists.value[state.value][it], navController)
+            when(state.value) {
+                1 -> DeliverySetItemGoing(lists.value[state.value][it], navController)
+                else -> DeliverySetItem(lists.value[state.value][it], navController)
+            }
         }
     }
 }
 
 @Composable
-fun DeliverySetItemButton(info: DeliverySetInfo, navController: NavController) {
+fun DeliverySetItem(info: DeliverySetInfo, navController: NavController) {
     Button(
         onClick = {
             navController.navigate("deliveryStatusDetail")
@@ -169,46 +172,120 @@ fun DeliverySetItemButton(info: DeliverySetInfo, navController: NavController) {
         contentPadding = PaddingValues(all = 16.dp),
         shape = MaterialTheme.shapes.small
     ) {
-        DeliverySetItem(info)
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(text = "${info.remainHour}시간 ${info.remainMinute}분 후 마감", color = alertRed)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = info.companyName,
+                    fontSize = smallMediumText,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(text = "${info.distance}km", color = titleTextColor, fontSize = smallText)
+            }
+            Divider(Modifier.padding(vertical = 16.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "배송 수량",
+                    fontSize = smallMediumText,
+                    color = titleTextColor,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(text = "${info.packageCount}개", fontSize = smallMediumText)
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "도착 시간",
+                    fontSize = smallMediumText,
+                    color = titleTextColor,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(text = info.arrivalTime, fontSize = smallMediumText)
+            }
+        }
     }
 }
 
 @Composable
-fun DeliverySetItem(info: DeliverySetInfo) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.Start
+fun DeliverySetItemGoing(info: DeliverySetInfo, navController: NavController) {
+    Button(
+        onClick = {
+            navController.navigate("deliveryStatusDetail")
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(bottom = 16.dp),
+        border = mainMenuStroke,
+        colors = ButtonDefaults.buttonColors(containerColor = mainMenuButtonColor),
+        contentPadding = PaddingValues(all = 8.dp),
+        shape = MaterialTheme.shapes.small
     ) {
-        Text(text = "${info.remainHour}시간 ${info.remainMinute}분 후 마감", color = alertRed)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = info.companyName,
-                fontSize = smallMediumText,
-                modifier = Modifier.padding(end = 8.dp)
-            )
-            Text(text = "${info.distance}km", color = titleTextColor, fontSize = smallText)
-        }
-        Divider(Modifier.padding(vertical = 16.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "배송 수량",
-                fontSize = smallMediumText,
-                color = titleTextColor,
-                modifier = Modifier.padding(end = 8.dp)
-            )
-            Text(text = "${info.packageCount}개", fontSize = smallMediumText)
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "도착 시간",
-                fontSize = smallMediumText,
-                color = titleTextColor,
-                modifier = Modifier.padding(end = 8.dp)
-            )
-            Text(text = info.arrivalTime, fontSize = smallMediumText)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Row(
+                modifier = Modifier.padding(bottom = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = info.companyName,
+                    color = textColor,
+                    fontSize = mediumText,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(text = "${info.distance}km", color = titleTextColor, fontSize = smallText)
+            }
+            Row(
+                modifier = Modifier.padding(bottom = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "배송 수량",
+                    fontSize = smallMediumText,
+                    color = titleTextColor,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(
+                    text = "${info.packageCount}개",
+                    color = textColor,
+                    fontSize = smallMediumText,
+                    modifier = Modifier.padding(end = 64.dp)
+                )
+                Text(
+                    text = "도착 시간",
+                    fontSize = smallMediumText,
+                    color = titleTextColor,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(text = info.arrivalTime, color = textColor, fontSize = smallMediumText)
+            }
+            Divider(color = titleTextColor)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(vertical = 16.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "현재 배송지",
+                    fontSize = smallMediumText,
+                    color = titleTextColor,
+                    modifier = Modifier.padding(end = 8.dp, bottom = 16.dp)
+                )
+                DeliveryItem(info.deliveries[0])
+            }
         }
     }
 }
+
 
 @Preview(showBackground = true, backgroundColor = 0xFF2D2D2D)
 @Composable
