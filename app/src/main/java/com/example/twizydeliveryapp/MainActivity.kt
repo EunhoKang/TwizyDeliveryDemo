@@ -48,7 +48,7 @@ fun MainScreen() {
             DeliveryStatus(navController)
         }
         composable("deliveryStatusDetail") {
-            DeliveryStatusDetail(navController)
+            DeliveryStatusDetail(DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"), navController)
         }
         composable("deliveryNavigation") {
             DeliveryNavigation(true, navController)
