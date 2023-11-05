@@ -178,13 +178,24 @@ fun MainBody(navController: NavController) {
 
 @Composable
 fun DeliveryStatusSummary() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.Start
-    ) {
-        Text(text = "배송 상태", color = titleTextColor)
-        Text(text = "배정된 상품이 없습니다.")
+    if(Status.isActive) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(text = "배송 상태", color = titleTextColor)
+            Text(text = "배정된 상품이 없습니다.")
+        }
+    } else {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(text = "배송 상태", color = titleTextColor)
+            Text(text = "배정된 상품이 없습니다.")
+        }
     }
 }
 
