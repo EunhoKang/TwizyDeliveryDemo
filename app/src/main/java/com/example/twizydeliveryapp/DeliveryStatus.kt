@@ -31,6 +31,7 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -55,7 +56,7 @@ fun DeliveryStatus(viewModel: DeliveryViewModel, navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DeliveryStatusHeader(navController)
-        DeliveryStatusBody(navController)
+        DeliveryStatusBody(viewModel, navController)
     }
 }
 
@@ -82,20 +83,17 @@ fun DeliveryStatusHeader(navController: NavController) {
 }
 
 @Composable
-fun DeliveryStatusBody(navController: NavController) {
-    val itemList = listOf(
-        DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"),
-        DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00")
-    )
+fun DeliveryStatusBody(viewModel: DeliveryViewModel, navController: NavController) {
     Column {
-        DeliveryStatusTabRow(listOf("배송 요청", "배송 중", "배송 완료"), listOf(2, 0, 0))
-        DeliverySetList(itemList, navController)
+        DeliveryStatusTabRow(viewModel, listOf("배송 요청", "배송 중", "배송 완료"))
+        DeliverySetList(viewModel, navController)
     }
 }
 
 @Composable
-fun DeliveryStatusTabRow(titles: List<String>, counts: List<Int>) {
+fun DeliveryStatusTabRow(viewModel: DeliveryViewModel, titles: List<String>) {
     var state by remember { mutableStateOf(0) }
+    val lists = viewModel.deliverySets.collectAsState()
     TabRow(
         selectedTabIndex = state,
         containerColor = tabRowColor,
@@ -111,7 +109,10 @@ fun DeliveryStatusTabRow(titles: List<String>, counts: List<Int>) {
         titles.forEachIndexed { index, title ->
             Tab(
                 selected = state == index,
-                onClick = { state = index },
+                onClick = {
+                    state = index
+                    viewModel.setState(index)
+                },
                 selectedContentColor = textColor,
                 unselectedContentColor = titleTextColor,
                 text = {
@@ -133,7 +134,7 @@ fun DeliveryStatusTabRow(titles: List<String>, counts: List<Int>) {
                                 .background(if (state == index) textColor else titleTextColor),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(text = counts[index].toString(), color = backgroundColor)
+                            Text(text = lists.value[index].count().toString(), color = backgroundColor)
                         }
                     }
                 }
@@ -143,10 +144,12 @@ fun DeliveryStatusTabRow(titles: List<String>, counts: List<Int>) {
 }
 
 @Composable
-fun DeliverySetList(list: List<DeliverySetInfo>, navController: NavController) {
+fun DeliverySetList(viewModel: DeliveryViewModel, navController: NavController) {
+    val state = viewModel.currentState.collectAsState()
+    val lists = viewModel.deliverySets.collectAsState()
     LazyColumn(contentPadding = PaddingValues(16.dp, 8.dp)) {
-        items(list.count()) {
-            DeliverySetItemButton(list[it], navController)
+        items(lists.value[state.value].count()) {
+            DeliverySetItemButton(lists.value[state.value][it], navController)
         }
     }
 }
@@ -178,16 +181,30 @@ fun DeliverySetItem(info: DeliverySetInfo) {
     ) {
         Text(text = "${info.remainHour}시간 ${info.remainMinute}분 후 마감", color = alertRed)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = info.companyName, fontSize = smallMediumText, modifier = Modifier.padding(end = 8.dp))
+            Text(
+                text = info.companyName,
+                fontSize = smallMediumText,
+                modifier = Modifier.padding(end = 8.dp)
+            )
             Text(text = "${info.distance}km", color = titleTextColor, fontSize = smallText)
         }
         Divider(Modifier.padding(vertical = 16.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "배송 수량", fontSize = smallMediumText, color = titleTextColor, modifier = Modifier.padding(end = 8.dp))
+            Text(
+                text = "배송 수량",
+                fontSize = smallMediumText,
+                color = titleTextColor,
+                modifier = Modifier.padding(end = 8.dp)
+            )
             Text(text = "${info.packageCount}개", fontSize = smallMediumText)
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "도착 시간", fontSize = smallMediumText, color = titleTextColor, modifier = Modifier.padding(end = 8.dp))
+            Text(
+                text = "도착 시간",
+                fontSize = smallMediumText,
+                color = titleTextColor,
+                modifier = Modifier.padding(end = 8.dp)
+            )
             Text(text = info.arrivalTime, fontSize = smallMediumText)
         }
     }
