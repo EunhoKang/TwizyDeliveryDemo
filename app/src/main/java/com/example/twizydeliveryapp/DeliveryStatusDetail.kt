@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,7 +52,8 @@ import com.example.twizydeliveryapp.ui.theme.titleTextColor
 import com.example.twizydeliveryapp.ui.theme.topAppBarColor
 
 @Composable
-fun DeliveryStatusDetail(viewModel: DeliveryViewModel, info: DeliverySetInfo, navController: NavController) {
+fun DeliveryStatusDetail(viewModel: DeliveryViewModel, navController: NavController) {
+    val items = viewModel.deliverySets.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -67,7 +69,7 @@ fun DeliveryStatusDetail(viewModel: DeliveryViewModel, info: DeliverySetInfo, na
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        DeliveryStatusBottomSheet(viewModel, info, navController)
+        DeliveryStatusBottomSheet(viewModel, items.value[0][0], navController)
     }
 }
 
@@ -218,10 +220,6 @@ fun DeliveryMap() {
 @Composable
 fun DeliveryStatusDetailPreview() {
     TwizyDeliveryAppTheme {
-        DeliveryStatusDetail(
-            DeliveryViewModel(),
-            DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"),
-            rememberNavController()
-        )
+        DeliveryStatusDetail(DeliveryViewModel(), rememberNavController())
     }
 }

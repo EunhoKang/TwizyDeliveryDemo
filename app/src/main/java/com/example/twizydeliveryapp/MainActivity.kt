@@ -50,13 +50,13 @@ fun MainScreen(viewModel: DeliveryViewModel) {
             DeliveryStatus(viewModel, navController)
         }
         composable("deliveryStatusDetail") {
-            DeliveryStatusDetail(viewModel, DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"), navController)
+            DeliveryStatusDetail(viewModel, navController)
         }
         composable("deliveryNavigation") {
             DeliveryNavigation(true, navController)
         }
         composable("deliveryList") {
-            DeliveryList(viewModel, DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"), navController)
+            DeliveryList(viewModel, navController)
         }
     }
 }

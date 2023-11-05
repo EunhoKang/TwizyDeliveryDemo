@@ -7,4 +7,5 @@ data class DeliverySetInfo(
     val companyName: String,
     val packageCount: Int,
     val arrivalTime: String,
+    val deliveries: List<DeliveryInfo>
 )

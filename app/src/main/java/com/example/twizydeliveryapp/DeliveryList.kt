@@ -18,6 +18,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,15 +36,16 @@ import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
 
 @Composable
-fun DeliveryList(viewModel: DeliveryViewModel, info: DeliverySetInfo, navController: NavController) {
+fun DeliveryList(viewModel: DeliveryViewModel, navController: NavController) {
     val openAlertDialog = remember { mutableStateOf(false) }
+    val items = viewModel.deliverySets.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DeliveryListHeader(navController)
-        DeliveryListBody(info)
+        DeliveryListBody(items.value[0][0])
     }
     Column(
         modifier = Modifier
@@ -100,78 +102,6 @@ fun DeliveryListHeader(navController: NavController) {
 
 @Composable
 fun DeliveryListBody(info: DeliverySetInfo) {
-    val itemList = listOf(
-        DeliveryInfo(
-            "홍길*",
-            "상록구 항가울로28 (e편한세상상록)",
-            "102동 1101호",
-            "592301940502",
-            DeliveryType.DELIVERY
-        ),
-        DeliveryInfo(
-            "홍길*",
-            "상록구 항가울로28 (e편한세상상록)",
-            "102동 1101호",
-            "592301940502",
-            DeliveryType.DELIVERY
-        ),
-        DeliveryInfo(
-            "홍길*",
-            "상록구 항가울로28 (e편한세상상록)",
-            "102동 1101호",
-            "592301940502",
-            DeliveryType.RETURN
-        ),
-        DeliveryInfo(
-            "홍길*",
-            "상록구 항가울로28 (e편한세상상록)",
-            "102동 1101호",
-            "592301940502",
-            DeliveryType.DELIVERY
-        ),
-        DeliveryInfo(
-            "홍길*",
-            "상록구 항가울로28 (e편한세상상록)",
-            "102동 1101호",
-            "592301940502",
-            DeliveryType.DELIVERY
-        ),
-        DeliveryInfo(
-            "홍길*",
-            "상록구 항가울로28 (e편한세상상록)",
-            "102동 1101호",
-            "592301940502",
-            DeliveryType.DELIVERY
-        ),
-        DeliveryInfo(
-            "홍길*",
-            "상록구 항가울로28 (e편한세상상록)",
-            "102동 1101호",
-            "592301940502",
-            DeliveryType.DELIVERY
-        ),
-        DeliveryInfo(
-            "홍길*",
-            "상록구 항가울로28 (e편한세상상록)",
-            "102동 1101호",
-            "592301940502",
-            DeliveryType.DELIVERY
-        ),
-        DeliveryInfo(
-            "홍길*",
-            "상록구 항가울로28 (e편한세상상록)",
-            "102동 1101호",
-            "592301940502",
-            DeliveryType.DELIVERY
-        ),
-        DeliveryInfo(
-            "홍길*",
-            "상록구 항가울로28 (e편한세상상록)",
-            "102동 1101호",
-            "592301940502",
-            DeliveryType.DELIVERY
-        )
-    )
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -231,7 +161,7 @@ fun DeliveryListBody(info: DeliverySetInfo) {
         )
     }
     Divider(color = titleTextColor)
-    DeliveryItemList(itemList)
+    DeliveryItemList(info.deliveries)
 }
 
 @Composable
@@ -291,10 +221,6 @@ fun DeliveryItem(info: DeliveryInfo) {
 @Composable
 fun DeliveryListPreview() {
     TwizyDeliveryAppTheme {
-        DeliveryList(
-            DeliveryViewModel(),
-            DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"),
-            rememberNavController()
-        )
+        DeliveryList(DeliveryViewModel(), rememberNavController())
     }
 }
