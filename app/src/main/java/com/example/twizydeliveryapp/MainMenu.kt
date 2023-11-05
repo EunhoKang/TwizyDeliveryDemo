@@ -25,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +46,8 @@ val mainMenuStroke = BorderStroke(
 )
 
 @Composable
-fun MainMenu(name: String, navController: NavController) {
+fun MainMenu(viewModel: DeliveryViewModel, name: String, navController: NavController) {
+    val isDeliveryStart = viewModel.isActive.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -53,7 +55,7 @@ fun MainMenu(name: String, navController: NavController) {
     ) {
         MainHeader()
         Greeting(name = name)
-        MainBody(navController)
+        MainBody(isDeliveryStart.value, navController)
     }
 }
 
@@ -106,13 +108,13 @@ fun Greeting(name: String) {
 }
 
 @Composable
-fun MainBody(navController: NavController) {
+fun MainBody(isDeliverStart: Boolean, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 16.dp),
     ) {
-        DeliveryStatusSummary(navController)
+        DeliveryStatusSummary(isDeliverStart, navController)
     }
     Row(
         modifier = Modifier
@@ -169,8 +171,8 @@ fun MainBody(navController: NavController) {
 }
 
 @Composable
-fun DeliveryStatusSummary(navController: NavController) {
-    if (Status.isActive) {
+fun DeliveryStatusSummary(isDeliverStart: Boolean, navController: NavController) {
+    if (isDeliverStart) {
         Button(
             onClick = {
                 navController.navigate("deliveryStatus")
@@ -261,6 +263,6 @@ fun DriverStatusSummary() {
 @Composable
 fun MainMenuPreview() {
     TwizyDeliveryAppTheme {
-        MainMenu("Android", rememberNavController())
+        MainMenu(DeliveryViewModel(),"Android", rememberNavController())
     }
 }

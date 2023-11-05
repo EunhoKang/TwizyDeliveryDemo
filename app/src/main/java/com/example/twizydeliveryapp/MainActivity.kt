@@ -3,6 +3,7 @@ package com.example.twizydeliveryapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
 
 class MainActivity : ComponentActivity() {
+    val viewModel: DeliveryViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -24,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = backgroundColor
                 ) {
-                    MainScreen()
+                    MainScreen(viewModel)
                 }
             }
         }
@@ -32,11 +34,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(viewModel: DeliveryViewModel) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
-            MainMenu("김배달", navController)
+            MainMenu(viewModel,"김배달", navController)
         }
         composable("mobilityStatus") {
             MobilityStatus(navController)
@@ -45,16 +47,16 @@ fun MainScreen() {
             DriverStatus(navController)
         }
         composable("deliveryStatus") {
-            DeliveryStatus(navController)
+            DeliveryStatus(viewModel, navController)
         }
         composable("deliveryStatusDetail") {
-            DeliveryStatusDetail(DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"), navController)
+            DeliveryStatusDetail(viewModel, DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"), navController)
         }
         composable("deliveryNavigation") {
             DeliveryNavigation(true, navController)
         }
         composable("deliveryList") {
-            DeliveryList(DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"), navController)
+            DeliveryList(viewModel, DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"), navController)
         }
     }
 }
@@ -63,6 +65,6 @@ fun MainScreen() {
 @Composable
 fun Preview() {
     TwizyDeliveryAppTheme {
-        MainScreen()
+        MainScreen(DeliveryViewModel())
     }
 }

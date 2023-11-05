@@ -18,6 +18,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -33,7 +35,8 @@ import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
 
 @Composable
-fun DeliveryList(info: DeliverySetInfo, navController: NavController) {
+fun DeliveryList(viewModel: DeliveryViewModel, info: DeliverySetInfo, navController: NavController) {
+    val openAlertDialog = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -49,8 +52,22 @@ fun DeliveryList(info: DeliverySetInfo, navController: NavController) {
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if(openAlertDialog.value) {
+            Column(modifier = Modifier, verticalArrangement = Arrangement.Center) {
+                AlertDialogForStart(
+                    onDismissRequest = { openAlertDialog.value = false },
+                    onConfirmation = {
+                        viewModel.activateDelivery()
+                        openAlertDialog.value = false
+                        navController.popBackStack()
+                    }
+                )
+            }
+        }
         Button(
-            onClick = { /*Data changed*/ },
+            onClick = {
+                openAlertDialog.value = true
+            },
             colors = ButtonDefaults.buttonColors(buttonBlue),
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -103,7 +120,7 @@ fun DeliveryListBody(info: DeliverySetInfo) {
             "상록구 항가울로28 (e편한세상상록)",
             "102동 1101호",
             "592301940502",
-            DeliveryType.DELIVERY
+            DeliveryType.RETURN
         ),
         DeliveryInfo(
             "홍길*",
@@ -275,6 +292,7 @@ fun DeliveryItem(info: DeliveryInfo) {
 fun DeliveryListPreview() {
     TwizyDeliveryAppTheme {
         DeliveryList(
+            DeliveryViewModel(),
             DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"),
             rememberNavController()
         )

@@ -48,7 +48,7 @@ import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
 
 @Composable
-fun DeliveryStatus(navController: NavController) {
+fun DeliveryStatus(viewModel: DeliveryViewModel, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -197,6 +197,6 @@ fun DeliverySetItem(info: DeliverySetInfo) {
 @Composable
 fun DeliveryStatusPreview() {
     TwizyDeliveryAppTheme {
-        DeliveryStatus(rememberNavController())
+        DeliveryStatus(DeliveryViewModel(), rememberNavController())
     }
 }

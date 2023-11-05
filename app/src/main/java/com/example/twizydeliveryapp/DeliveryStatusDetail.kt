@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.getValue
@@ -24,6 +25,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,7 +52,7 @@ import com.example.twizydeliveryapp.ui.theme.titleTextColor
 import com.example.twizydeliveryapp.ui.theme.topAppBarColor
 
 @Composable
-fun DeliveryStatusDetail(info: DeliverySetInfo, navController: NavController) {
+fun DeliveryStatusDetail(viewModel: DeliveryViewModel, info: DeliverySetInfo, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -66,16 +68,29 @@ fun DeliveryStatusDetail(info: DeliverySetInfo, navController: NavController) {
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        DeliveryStatusBottomSheet(info, navController)
+        DeliveryStatusBottomSheet(viewModel, info, navController)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeliveryStatusBottomSheet(info: DeliverySetInfo, navController: NavController) {
+fun DeliveryStatusBottomSheet(viewModel: DeliveryViewModel, info: DeliverySetInfo, navController: NavController) {
+    val openAlertDialog = remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     var isSheetOpen by rememberSaveable {
         mutableStateOf(true)
+    }
+
+    if(openAlertDialog.value) {
+        Column(verticalArrangement = Arrangement.Center) {
+            AlertDialogForStart(
+                onDismissRequest = { openAlertDialog.value = false },
+                onConfirmation = {
+                    viewModel.activateDelivery()
+                    openAlertDialog.value = false
+                }
+            )
+        }
     }
 
     Button(
@@ -143,6 +158,7 @@ fun DeliveryStatusBottomSheet(info: DeliverySetInfo, navController: NavControlle
             ClickableText(
                 text = AnnotatedString("배송 목록 확인하기 △"),
                 onClick = {
+                    //isSheetOpen = false
                     navController.navigate("deliveryList")
                 },
                 style = TextStyle(
@@ -154,11 +170,13 @@ fun DeliveryStatusBottomSheet(info: DeliverySetInfo, navController: NavControlle
                     .align(Alignment.CenterHorizontally)
             )
             Button(
-                onClick = { isSheetOpen = true },
+                onClick = {
+                    openAlertDialog.value = true
+                },
                 colors = ButtonDefaults.buttonColors(buttonBlue),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 32.dp)
+                    .padding(start = 16.dp, end = 16.dp, bottom = 36.dp)
             ) {
                 Text(text = "배송 받으러 가기", color = textColor, fontSize = smallMediumText)
             }
@@ -202,6 +220,7 @@ fun DeliveryMap() {
 fun DeliveryStatusDetailPreview() {
     TwizyDeliveryAppTheme {
         DeliveryStatusDetail(
+            DeliveryViewModel(),
             DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"),
             rememberNavController()
         )
