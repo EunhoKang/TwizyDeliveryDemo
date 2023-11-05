@@ -9,6 +9,7 @@ val mainMenuStrokeColor = Color(0xFF575555)
 val mainMenuButtonColor = Color(0xFF1F1F1F)
 val topAppBarColor = Color(0x00000000)
 val tabRowColor = Color(0x00000000)
+val buttonBlue = Color(0xFF3367EE)
 
 val statusBlue = Color(0xFF5585FF)
 val statusBlack = Color(0xFF212529)

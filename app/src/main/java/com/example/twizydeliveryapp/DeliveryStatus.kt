@@ -2,7 +2,6 @@ package com.example.twizydeliveryapp
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.twizydeliveryapp.data.DeliverySetInfo
 import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
 
@@ -152,10 +152,10 @@ fun DeliverySetList(list: List<DeliverySetInfo>, navController: NavController) {
 }
 
 @Composable
-fun DeliverySetItem(info: DeliverySetInfo,navController: NavController) {
+fun DeliverySetItem(info: DeliverySetInfo, navController: NavController) {
     Button(
         onClick = {
-            navController.navigate("deliveryStatus")
+            navController.navigate("deliveryStatusDetail")
         },
         modifier = Modifier
             .fillMaxWidth()

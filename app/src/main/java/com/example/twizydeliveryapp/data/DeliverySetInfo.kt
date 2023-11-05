@@ -1,4 +1,4 @@
-package com.example.twizydeliveryapp
+package com.example.twizydeliveryapp.data
 
 data class DeliverySetInfo(
     val remainHour: Int,

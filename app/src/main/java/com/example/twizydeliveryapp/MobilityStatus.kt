@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -116,11 +117,11 @@ fun MobilityStatusBody() {
     Button(
         onClick = { /**/ },
         modifier = Modifier
-            .height(160.dp)
+            .height(200.dp)
             .padding(horizontal = 16.dp),
         border = mainMenuStroke,
         colors = ButtonDefaults.buttonColors(containerColor = mainMenuButtonColor),
-        contentPadding = PaddingValues(all = 16.dp),
+        contentPadding = PaddingValues(all = 0.dp),
         shape = MaterialTheme.shapes.extraSmall
     ) {
         MobilityStatusReport()
@@ -156,87 +157,108 @@ fun VerticalDivider(length: Int) {
 @Composable
 fun MobilityStatusReport() {
     val textMeasurer = rememberTextMeasurer()
-    Row {
-        Column(
+    Column {
+        Row(
             modifier = Modifier
-                .fillMaxSize()
-                .weight(1.4f),
-            horizontalAlignment = Alignment.Start
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .height(128.dp)
         ) {
-            Text(
-                text = "점검 리포트",
-                fontSize = mediumText,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            Row {
-                Text(text = "기본점검", fontSize = smallText, modifier = Modifier
-                    .width(64.dp)
-                    .padding(end = 8.dp))
-                Text(text = "양호", color = titleTextColor, fontSize = smallText)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1.4f),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "점검 리포트",
+                    fontSize = mediumText,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                Row {
+                    Text(
+                        text = "기본점검", fontSize = smallText, modifier = Modifier
+                            .width(64.dp)
+                            .padding(end = 8.dp)
+                    )
+                    Text(text = "양호", color = titleTextColor, fontSize = smallText)
+                }
+                Row {
+                    Text(
+                        text = "배터리", fontSize = smallText, modifier = Modifier
+                            .width(64.dp)
+                            .padding(end = 8.dp)
+                    )
+                    Text(text = "배터리 교체 완료", color = titleTextColor, fontSize = smallText)
+                }
+                Row {
+                    Text(
+                        text = "브레이크", fontSize = smallText, modifier = Modifier
+                            .width(64.dp)
+                            .padding(end = 8.dp)
+                    )
+                    Text(text = "브레이크 액 교체 완료", color = titleTextColor, fontSize = smallText)
+                }
             }
-            Row {
-                Text(text = "배터리", fontSize = smallText, modifier = Modifier
-                    .width(64.dp)
-                    .padding(end = 8.dp))
-                Text(text = "배터리 교체 완료", color = titleTextColor, fontSize = smallText)
-            }
-            Row {
-                Text(text = "브레이크", fontSize = smallText, modifier = Modifier
-                    .width(64.dp)
-                    .padding(end = 8.dp))
-                Text(text = "브레이크 액 교체 완료", color = titleTextColor, fontSize = smallText)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.6f),
+                horizontalAlignment = Alignment.End
+            ) {
+                Text(
+                    text = "2023.10.16 최근 점검",
+                    color = titleTextColor,
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    fontSize = extraSmallText
+                )
+                Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+                    val sizeArc = size / 1.75F
+                    drawArc(
+                        color = statusBlack,
+                        startAngle = 0f,
+                        sweepAngle = 360f,
+                        useCenter = false,
+                        topLeft = Offset(
+                            (size.width - sizeArc.width) / 2f,
+                            (size.height - sizeArc.height) / 2f
+                        ),
+                        size = sizeArc,
+                        style = Stroke(width = 20f)
+                    )
+
+                    drawArc(
+                        color = statusBlue,
+                        startAngle = -90f,
+                        sweepAngle = 300f,
+                        useCenter = false,
+                        topLeft = Offset(
+                            (size.width - sizeArc.width) / 2f,
+                            (size.height - sizeArc.height) / 2f
+                        ),
+                        size = sizeArc,
+                        style = Stroke(width = 20f, cap = StrokeCap.Round)
+                    )
+
+                    drawText(
+                        textMeasurer = textMeasurer,
+                        style = TextStyle(color = textColor, fontSize = mediumText),
+                        topLeft = Offset(
+                            (size.width - sizeArc.width / 5f * 2f) / 2f,
+                            (size.height - sizeArc.height / 2f) / 2f
+                        ),
+                        text = "90"
+                    )
+                })
             }
         }
+        Divider(modifier = Modifier.padding(bottom = 8.dp), color = titleTextColor)
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(0.6f),
-            horizontalAlignment = Alignment.End
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "2023.10.16 최근 점검",
-                color = titleTextColor,
-                modifier = Modifier.padding(bottom = 16.dp),
-                fontSize = extraSmallText
-            )
-            Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
-                val sizeArc = size / 1.75F
-                drawArc(
-                    color = statusBlack,
-                    startAngle = 0f,
-                    sweepAngle = 360f,
-                    useCenter = false,
-                    topLeft = Offset((size.width - sizeArc.width) / 2f, (size.height - sizeArc.height) / 2f),
-                    size = sizeArc,
-                    style = Stroke(width = 20f)
-                )
-
-                drawArc(
-                    color = statusBlue,
-                    startAngle = -90f,
-                    sweepAngle = 300f,
-                    useCenter = false,
-                    topLeft = Offset(
-                        (size.width - sizeArc.width) / 2f,
-                        (size.height - sizeArc.height) / 2f
-                    ),
-                    size = sizeArc,
-                    style = Stroke(width = 20f, cap = StrokeCap.Round)
-                )
-
-                drawText(
-                    textMeasurer = textMeasurer,
-                    style = TextStyle(color = textColor, fontSize = mediumText),
-                    topLeft = Offset(
-                        (size.width - sizeArc.width / 5f * 2f) / 2f,
-                        (size.height - sizeArc.height / 2f) / 2f
-                    ),
-                    text = "90"
-                )
-            })
+            Text(text = "자세히 보기 ⊳", color = titleTextColor)
         }
     }
-    Text(text = "자세히 보기")
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFF2D2D2D)

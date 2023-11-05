@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.twizydeliveryapp.data.DeliverySetInfo
 import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
 
@@ -53,7 +54,7 @@ fun MainScreen() {
             DeliveryNavigation(true, navController)
         }
         composable("deliveryList") {
-            DeliveryList(navController)
+            DeliveryList(DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00"), navController)
         }
     }
 }
