@@ -119,12 +119,7 @@ fun MainBody(navController: NavController) {
             contentPadding = PaddingValues(all = 16.dp),
             shape = MaterialTheme.shapes.medium
         ) {
-            Column(
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.Start
-            ) {
-                DeliveryStatusSummary()
-            }
+            DeliveryStatusSummary()
         }
     }
     Row(
