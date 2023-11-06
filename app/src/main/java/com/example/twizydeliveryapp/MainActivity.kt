@@ -53,7 +53,7 @@ fun MainScreen(viewModel: DeliveryViewModel) {
             DeliveryStatusDetail(viewModel, navController)
         }
         composable("deliveryNavigation") {
-            DeliveryNavigation(true, navController)
+            DeliveryNavigation(viewModel, navController)
         }
         composable("deliveryList") {
             DeliveryList(viewModel, navController)

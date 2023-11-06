@@ -185,7 +185,8 @@ fun DeliveryItem(info: DeliveryInfo) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .wrapContentHeight()
                 .weight(1.5f),
             horizontalAlignment = Alignment.Start
         ) {
@@ -196,7 +197,8 @@ fun DeliveryItem(info: DeliveryInfo) {
         }
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .wrapContentHeight()
                 .weight(0.5f),
             horizontalAlignment = Alignment.End
         ) {

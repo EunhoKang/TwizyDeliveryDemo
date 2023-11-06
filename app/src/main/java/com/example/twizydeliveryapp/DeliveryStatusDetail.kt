@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,12 +55,13 @@ import com.example.twizydeliveryapp.ui.theme.topAppBarColor
 @Composable
 fun DeliveryStatusDetail(viewModel: DeliveryViewModel, navController: NavController) {
     val items = viewModel.deliverySets.collectAsState()
+    val isActive = viewModel.isActive.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        DeliveryStatusDetailHeader(navController)
+        DeliveryStatusDetailHeader(if (isActive.value) "배송 네비게이션" else "배송 상태 상세", navController)
         DeliveryMap()
     }
     Column(
@@ -69,20 +71,88 @@ fun DeliveryStatusDetail(viewModel: DeliveryViewModel, navController: NavControl
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        DeliveryStatusBottomSheet(viewModel, items.value[0][0], navController)
+        if (isActive.value) DeliveryActivateBottomSheet(items.value[0][0], navController)
+        else DeliveryStatusBottomSheet(viewModel, items.value[0][0], navController)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeliveryStatusBottomSheet(viewModel: DeliveryViewModel, info: DeliverySetInfo, navController: NavController) {
+fun DeliveryActivateBottomSheet(
+    info: DeliverySetInfo,
+    navController: NavController
+) {
+    val sheetState = rememberModalBottomSheetState()
+    var isSheetOpen by rememberSaveable {
+        mutableStateOf(true)
+    }
+
+    Button(
+        onClick = { isSheetOpen = true },
+        colors = ButtonDefaults.buttonColors(buttonBlue),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(text = "안내 시작", color = textColor, fontSize = smallMediumText)
+    }
+
+    if (isSheetOpen) {
+        ModalBottomSheet(
+            containerColor = backgroundColor,
+            sheetState = sheetState,
+            onDismissRequest = {
+                isSheetOpen = false
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "다음 배송지 정보",
+                    color = textColor,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = mediumText,
+                    modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
+                )
+                Divider(color = titleTextColor, thickness = 1.dp)
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp)
+                ) {
+                    DeliveryItem(info.deliveries[0])
+                }
+                Button(
+                    onClick = {
+                        navController.navigate("deliveryNavigation")
+                    },
+                    colors = ButtonDefaults.buttonColors(buttonBlue),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 36.dp)
+                ) {
+                    Text(text = "안내 시작", color = textColor, fontSize = smallMediumText)
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeliveryStatusBottomSheet(
+    viewModel: DeliveryViewModel,
+    info: DeliverySetInfo,
+    navController: NavController
+) {
     val openAlertDialog = remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     var isSheetOpen by rememberSaveable {
         mutableStateOf(true)
     }
 
-    if(openAlertDialog.value) {
+    if (openAlertDialog.value) {
         Column(verticalArrangement = Arrangement.Center) {
             AlertDialogForStart(
                 onDismissRequest = { openAlertDialog.value = false },
@@ -187,9 +257,9 @@ fun DeliveryStatusBottomSheet(viewModel: DeliveryViewModel, info: DeliverySetInf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeliveryStatusDetailHeader(navController: NavController) {
+fun DeliveryStatusDetailHeader(text: String, navController: NavController) {
     CenterAlignedTopAppBar(
-        title = { Text(text = "배송 요청 상세", color = textColor) },
+        title = { Text(text = text, color = textColor) },
         colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = topAppBarColor),
         navigationIcon = {
             IconButton(

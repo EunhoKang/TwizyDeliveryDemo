@@ -44,7 +44,7 @@ fun AlertDialogForStart(
         },
         text = {
             Column() {
-                Text(text = "유의사항에 들어갈 텍스트는 직접 짜주시면 좋을 것 같습니다.\n(차량 보유상태, 시간, 노쇼나 중도 포기 시 패널티 등등에 대한 안내)")
+                Text(text = "차량을 보유하지 않거나 배송물품을 받으러 오지 않는 경우 향후 활동에 제한될 수 있으며 발생하는 문제에 대해선 당사는 책임지지 않습니다.")
                 Row(
                     modifier = Modifier.padding(top = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
