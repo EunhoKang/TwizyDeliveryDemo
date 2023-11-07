@@ -66,8 +66,7 @@ fun DeliveryStatusDetail(viewModel: DeliveryViewModel, navController: NavControl
     }
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -153,7 +152,7 @@ fun DeliveryStatusBottomSheet(
     }
 
     if (openAlertDialog.value) {
-        Column(verticalArrangement = Arrangement.Center) {
+        Column(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.Center) {
             AlertDialogForStart(
                 onDismissRequest = { openAlertDialog.value = false },
                 onConfirmation = {

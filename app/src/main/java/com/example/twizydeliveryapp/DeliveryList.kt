@@ -70,8 +70,7 @@ fun DeliveryList(viewModel: DeliveryViewModel, navController: NavController) {
     }
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -147,7 +146,7 @@ fun DeliveryList(viewModel: DeliveryViewModel, navController: NavController) {
             }
         } else {
             if (openAlertDialog.value) {
-                Column(modifier = Modifier, verticalArrangement = Arrangement.Center) {
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.Center) {
                     AlertDialogForStart(
                         onDismissRequest = {
                             openAlertDialog.value = false
@@ -173,13 +172,14 @@ fun DeliveryList(viewModel: DeliveryViewModel, navController: NavController) {
     }
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (isFinished.value) {
-            Column {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)) {
                 DialogForFinish {
                     isFinished.value = false
                     openBottomSheet.value = false

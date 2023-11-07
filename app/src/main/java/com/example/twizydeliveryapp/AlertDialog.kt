@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
 
@@ -43,7 +44,7 @@ fun AlertDialogForStart(
             }
         },
         text = {
-            Column() {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "차량을 보유하지 않거나 배송물품을 받으러 오지 않는 경우 향후 활동에 제한될 수 있으며 발생하는 문제에 대해선 당사는 책임지지 않습니다.")
                 Row(
                     modifier = Modifier.padding(top = 16.dp),
@@ -83,7 +84,9 @@ fun AlertDialogForStart(
         },
         containerColor = backgroundColor,
         titleContentColor = textColor,
-        textContentColor = textColor
+        textContentColor = textColor,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        modifier = Modifier.padding(12.dp)
     )
 }
 
