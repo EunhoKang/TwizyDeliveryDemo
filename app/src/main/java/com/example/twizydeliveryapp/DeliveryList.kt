@@ -2,6 +2,7 @@ package com.example.twizydeliveryapp
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +33,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,7 +52,6 @@ fun DeliveryList(viewModel: DeliveryViewModel, navController: NavController) {
     val openAlertDialog = remember { mutableStateOf(false) }
     val openBottomSheet = remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
-    var isSheetOpen by rememberSaveable { mutableStateOf(true) }
     val isFinished = remember { mutableStateOf(false) }
 
     val items = viewModel.deliverySets.collectAsState()
@@ -60,7 +62,10 @@ fun DeliveryList(viewModel: DeliveryViewModel, navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DeliveryListHeader(navController)
-        if(isActive.value) DeliveryActiveList({ openBottomSheet.value = true }, items.value[0][0].deliveries)
+        if (isActive.value) DeliveryActiveList(
+            { openBottomSheet.value = true },
+            items.value[0][0].deliveries
+        )
         else DeliveryListBody(items.value[0][0])
     }
     Column(
@@ -70,13 +75,13 @@ fun DeliveryList(viewModel: DeliveryViewModel, navController: NavController) {
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(isActive.value){
-            if(openBottomSheet.value) {
+        if (isActive.value) {
+            if (openBottomSheet.value) {
                 ModalBottomSheet(
                     containerColor = backgroundColor,
                     sheetState = sheetState,
                     onDismissRequest = {
-                        isSheetOpen = false
+                        openBottomSheet.value = false
                     }
                 ) {
                     Column(
@@ -99,32 +104,54 @@ fun DeliveryList(viewModel: DeliveryViewModel, navController: NavController) {
                         ) {
                             DeliveryItem(items.value[0][0].deliveries[0])
                         }
-                        Row(modifier = Modifier
-                            .padding(horizontal = 16.dp)) {
-                            ClickableText(text = AnnotatedString("닫기"), onClick = {
-                                isSheetOpen = false
-                            })
-                            Button(
-                                onClick = {
-                                    isFinished.value = true
-                                    viewModel.finishOne()
-                                },
-                                colors = ButtonDefaults.buttonColors(buttonBlue),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 16.dp, end = 16.dp, bottom = 36.dp)
+                        Row(
+                            modifier = Modifier
+                                .padding(start = 16.dp, end = 16.dp, bottom = 36.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = "배송 완료 문자 보내기", color = textColor, fontSize = smallMediumText)
+                                ClickableText(
+                                    text = AnnotatedString("닫기"),
+                                    style = TextStyle(fontSize = smallText, color = titleTextColor),
+                                    onClick = {
+                                        openBottomSheet.value = false
+                                    })
+                            }
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Button(
+                                    onClick = {
+                                        isFinished.value = true
+                                    },
+                                    contentPadding = PaddingValues(4.dp),
+                                    colors = ButtonDefaults.buttonColors(buttonBlue),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(end = 16.dp)
+                                ) {
+                                    Text(
+                                        text = "배송 완료 문자 보내기",
+                                        color = textColor,
+                                        fontSize = smallText
+                                    )
+                                }
                             }
                         }
                     }
                 }
             }
         } else {
-            if(openAlertDialog.value) {
+            if (openAlertDialog.value) {
                 Column(modifier = Modifier, verticalArrangement = Arrangement.Center) {
                     AlertDialogForStart(
-                        onDismissRequest = { openAlertDialog.value = false },
+                        onDismissRequest = {
+                            openAlertDialog.value = false
+                        },
                         onConfirmation = {
                             viewModel.activateDelivery()
                             openAlertDialog.value = false
@@ -151,10 +178,12 @@ fun DeliveryList(viewModel: DeliveryViewModel, navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(isFinished.value) {
+        if (isFinished.value) {
             Column {
                 DialogForFinish {
                     isFinished.value = false
+                    openBottomSheet.value = false
+                    viewModel.finishOne()
                 }
             }
         }
@@ -184,21 +213,27 @@ fun DeliveryListHeader(navController: NavController) {
 }
 
 @Composable
-fun DeliveryActiveList(callback: () -> Unit, list: List<DeliveryInfo>){
+fun DeliveryActiveList(callback: () -> Unit, list: List<DeliveryInfo>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        Text(text = "현재 배송중인 물품", color = titleTextColor, modifier = Modifier.padding(bottom = 16.dp))
+        Text(
+            text = "현재 배송중인 물품",
+            color = titleTextColor,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
         DeliveryItem(list[0])
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.End
         ) {
             Button(
-                onClick = { callback.invoke() },
+                onClick = {
+                    callback.invoke()
+                          },
                 colors = ButtonDefaults.buttonColors(buttonGrey)
             ) {
                 Text(text = "배송 완료", color = textColor)
@@ -299,7 +334,10 @@ fun DeliveryItemList(list: List<DeliveryInfo>) {
 
 @Composable
 fun DeliveryItem(info: DeliveryInfo) {
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
