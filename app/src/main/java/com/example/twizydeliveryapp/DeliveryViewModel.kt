@@ -109,8 +109,8 @@ class DeliveryViewModel : ViewModel() {
     fun finishOne() {
         _deliverySets.value = listOf(
             listOf(
-                DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00", items)
-            ), listOf(DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00", items.drop(1))), listOf()
+                DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00", items.drop(1))
+            ), listOf(DeliverySetInfo(7, 29, 1.2f, "CJ대한통운 사일대리점", 10, "18:00", items)), listOf()
         )
     }
 
