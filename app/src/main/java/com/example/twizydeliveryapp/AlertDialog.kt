@@ -84,7 +84,6 @@ fun AlertDialogForStart(
         containerColor = backgroundColor,
         titleContentColor = textColor,
         textContentColor = textColor
-
     )
 }
 

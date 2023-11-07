@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -15,16 +16,23 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -35,17 +43,25 @@ import com.example.twizydeliveryapp.data.DeliveryType
 import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeliveryList(viewModel: DeliveryViewModel, navController: NavController) {
     val openAlertDialog = remember { mutableStateOf(false) }
+    val openBottomSheet = remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+    var isSheetOpen by rememberSaveable { mutableStateOf(true) }
+    val isFinished = remember { mutableStateOf(false) }
+
     val items = viewModel.deliverySets.collectAsState()
+    val isActive = viewModel.isActive.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DeliveryListHeader(navController)
-        DeliveryListBody(items.value[0][0])
+        if(isActive.value) DeliveryActiveList({ openBottomSheet.value = true }, items.value[0][0].deliveries)
+        else DeliveryListBody(items.value[0][0])
     }
     Column(
         modifier = Modifier
@@ -54,26 +70,93 @@ fun DeliveryList(viewModel: DeliveryViewModel, navController: NavController) {
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(openAlertDialog.value) {
-            Column(modifier = Modifier, verticalArrangement = Arrangement.Center) {
-                AlertDialogForStart(
-                    onDismissRequest = { openAlertDialog.value = false },
-                    onConfirmation = {
-                        viewModel.activateDelivery()
-                        openAlertDialog.value = false
-                        navController.popBackStack()
+        if(isActive.value){
+            if(openBottomSheet.value) {
+                ModalBottomSheet(
+                    containerColor = backgroundColor,
+                    sheetState = sheetState,
+                    onDismissRequest = {
+                        isSheetOpen = false
                     }
-                )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = "마지막으로 배송정보를 확인 후\n고객에게 배송 완료 문자를 보내세요",
+                            color = textColor,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = mediumText,
+                            modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
+                        )
+                        Divider(color = titleTextColor, thickness = 1.dp)
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp)
+                        ) {
+                            DeliveryItem(items.value[0][0].deliveries[0])
+                        }
+                        Row(modifier = Modifier
+                            .padding(horizontal = 16.dp)) {
+                            ClickableText(text = AnnotatedString("닫기"), onClick = {
+                                isSheetOpen = false
+                            })
+                            Button(
+                                onClick = {
+                                    isFinished.value = true
+                                    viewModel.finishOne()
+                                },
+                                colors = ButtonDefaults.buttonColors(buttonBlue),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 16.dp, end = 16.dp, bottom = 36.dp)
+                            ) {
+                                Text(text = "배송 완료 문자 보내기", color = textColor, fontSize = smallMediumText)
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            if(openAlertDialog.value) {
+                Column(modifier = Modifier, verticalArrangement = Arrangement.Center) {
+                    AlertDialogForStart(
+                        onDismissRequest = { openAlertDialog.value = false },
+                        onConfirmation = {
+                            viewModel.activateDelivery()
+                            openAlertDialog.value = false
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
+            Button(
+                onClick = {
+                    openAlertDialog.value = true
+                },
+                colors = ButtonDefaults.buttonColors(buttonBlue),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "배송 받으러 가기", color = textColor, fontSize = smallMediumText)
             }
         }
-        Button(
-            onClick = {
-                openAlertDialog.value = true
-            },
-            colors = ButtonDefaults.buttonColors(buttonBlue),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "배송 받으러 가기", color = textColor, fontSize = smallMediumText)
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if(isFinished.value) {
+            Column {
+                DialogForFinish {
+                    isFinished.value = false
+                }
+            }
         }
     }
 }
@@ -98,6 +181,40 @@ fun DeliveryListHeader(navController: NavController) {
             }
         }
     )
+}
+
+@Composable
+fun DeliveryActiveList(callback: () -> Unit, list: List<DeliveryInfo>){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(text = "현재 배송중인 물품", color = titleTextColor, modifier = Modifier.padding(bottom = 16.dp))
+        DeliveryItem(list[0])
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.End
+        ) {
+            Button(
+                onClick = { callback.invoke() },
+                colors = ButtonDefaults.buttonColors(buttonGrey)
+            ) {
+                Text(text = "배송 완료", color = textColor)
+            }
+        }
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(text = "배송 예정 목록", color = titleTextColor)
+    }
+    Divider(color = titleTextColor)
+    DeliveryItemList(list.drop(1))
 }
 
 @Composable

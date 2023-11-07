@@ -13,6 +13,7 @@ val buttonBlue = Color(0xFF3367EE)
 
 val statusBlue = Color(0xFF5585FF)
 val statusBlack = Color(0xFF212529)
+val buttonGrey = Color(0xFF484D52)
 val gradiantGreenFirst = Color(0xFF25EA2D)
 val gradiantGreenSecond = Color(0xFFACFFCD)
 val alertRed = Color(0xFFFE4848)
