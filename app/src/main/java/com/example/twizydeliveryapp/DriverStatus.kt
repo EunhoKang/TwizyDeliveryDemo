@@ -1,6 +1,7 @@
 package com.example.twizydeliveryapp
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -91,69 +93,83 @@ fun DriverStatusHeader(navController: NavController) {
 @Composable
 fun DriverStatusBody() {
     val textMeasurer = rememberTextMeasurer()
-    Box {
-        Canvas(modifier = Modifier.size(width = 320.dp, height = 320.dp), onDraw = {
-            val sizeArc = size / 1.25F
-            drawArc(
-                color = statusBlack,
-                startAngle = -170f,
-                sweepAngle = 160f,
-                useCenter = false,
-                topLeft = Offset(
-                    (size.width - sizeArc.width) / 2f,
-                    (size.height - sizeArc.height) / 2f
-                ),
-                size = sizeArc,
-                style = Stroke(width = 40f, cap = StrokeCap.Round)
-            )
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
+        Canvas(
+            modifier = Modifier.size(width = 320.dp, height = 320.dp),
+            onDraw = {
+                val sizeArc = size / 1.25F
+                drawArc(
+                    color = statusBlack,
+                    startAngle = -170f,
+                    sweepAngle = 160f,
+                    useCenter = false,
+                    topLeft = Offset(
+                        (size.width - sizeArc.width) / 2f,
+                        (size.height - sizeArc.height) / 2f - 50
+                    ),
+                    size = sizeArc,
+                    style = Stroke(width = 20f, cap = StrokeCap.Round)
+                )
 
-            drawArc(
-                brush = Brush.linearGradient(
-                    colors = listOf(gradiantGreenFirst, gradiantGreenSecond),
-                    start = Offset.Zero,
-                    end = Offset.Infinite,
-                ),
-                startAngle = -170f,
-                sweepAngle = 120f,
-                useCenter = false,
-                topLeft = Offset(
-                    (size.width - sizeArc.width) / 2f,
-                    (size.height - sizeArc.height) / 2f
-                ),
-                size = sizeArc,
-                style = Stroke(width = 40f, cap = StrokeCap.Round)
-            )
+                drawArc(
+                    brush = Brush.linearGradient(
+                        colors = listOf(gradiantGreenFirst, gradiantGreenSecond),
+                        start = Offset.Zero,
+                        end = Offset.Infinite,
+                    ),
+                    startAngle = -170f,
+                    sweepAngle = 120f,
+                    useCenter = false,
+                    topLeft = Offset(
+                        (size.width - sizeArc.width) / 2f,
+                        (size.height - sizeArc.height) / 2f - 50
+                    ),
+                    size = sizeArc,
+                    style = Stroke(width = 20f, cap = StrokeCap.Round)
+                )
 
-            drawText(
-                textMeasurer = textMeasurer,
-                style = TextStyle(color = titleTextColor, fontSize = smallText),
-                topLeft = Offset(
-                    (size.width - sizeArc.width / 5f * 2f) / 2f,
-                    (size.height - sizeArc.height / 2f) / 2f
-                ),
-                text = "운전자 주의 수준"
-            )
+                drawText(
+                    textMeasurer = textMeasurer,
+                    style = TextStyle(color = titleTextColor, fontSize = smallText),
+                    topLeft = Offset(
+                        (size.width - sizeArc.width / 5f * 2f) / 2f,
+                        (size.height - sizeArc.height / 2f) / 2f - 75
+                    ),
+                    text = "운전자 주의 수준"
+                )
 
-            drawText(
-                textMeasurer = textMeasurer,
-                style = TextStyle(color = textColor, fontSize = bigText),
-                topLeft = Offset(
-                    (size.width - sizeArc.width / 5f * 1f) / 2f,
-                    (size.height - sizeArc.height / 7f * 2f) / 2f
-                ),
-                text = "좋음"
-            )
-        })
-        Row(
+                drawText(
+                    textMeasurer = textMeasurer,
+                    style = TextStyle(color = textColor, fontSize = bigText),
+                    topLeft = Offset(
+                        (size.width - sizeArc.width / 5f * 1f) / 2f,
+                        (size.height - sizeArc.height / 7f * 2f) / 2f - 75
+                    ),
+                    text = "좋음"
+                )
+            })
+        Column(
             modifier = Modifier
-                .padding(top = 160.dp)
-                .align(Alignment.Center),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(top = 150.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TitleAndDescriptionWithIconVertical("분당 호흡수", "14 Bpm", R.drawable.breath)
-            VerticalDivider(64)
-            TitleAndDescriptionWithIconVertical("분당 심박수", "95 Bpm", R.drawable.heart)
+            Image(
+                painter = painterResource(id = R.drawable.breath_full),
+                contentDescription = "breath",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+            )
+            Image(
+                painter = painterResource(id = R.drawable.heart_full),
+                contentDescription = "heart",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth()
+            )
         }
     }
 }
@@ -180,7 +196,12 @@ fun TitleAndDescriptionWithIconVertical(title: String, description: String, icon
                     .size(width = 18.dp, height = 18.dp),
                 tint = textColor
             )
-            Text(text = description, color = textColor, fontSize = bigText, modifier = Modifier.padding(start = 8.dp))
+            Text(
+                text = description,
+                color = textColor,
+                fontSize = bigText,
+                modifier = Modifier.padding(start = 8.dp)
+            )
         }
     }
 }
