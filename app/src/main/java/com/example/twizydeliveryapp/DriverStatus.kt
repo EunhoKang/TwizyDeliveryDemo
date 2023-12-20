@@ -41,7 +41,7 @@ import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
 
 @Composable
-fun DriverStatus(navController: NavController) {
+fun DriverStatus(viewModel: DriverStatusViewModel, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -210,6 +210,6 @@ fun TitleAndDescriptionWithIconVertical(title: String, description: String, icon
 @Composable
 fun DriverStatusPreview() {
     TwizyDeliveryAppTheme {
-        DriverStatus(rememberNavController())
+        DriverStatus(DriverStatusViewModel(), rememberNavController())
     }
 }

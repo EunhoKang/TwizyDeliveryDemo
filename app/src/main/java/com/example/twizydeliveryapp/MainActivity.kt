@@ -12,12 +12,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.twizydeliveryapp.data.DeliverySetInfo
 import com.example.twizydeliveryapp.ui.theme.TwizyDeliveryAppTheme
 import com.example.twizydeliveryapp.ui.theme.*
 
 class MainActivity : ComponentActivity() {
-    val viewModel: DeliveryViewModel by viewModels()
+    private val deliveryViewModel: DeliveryViewModel by viewModels()
+    private val driverStatusViewModel: DriverStatusViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = backgroundColor
                 ) {
-                    MainScreen(viewModel)
+                    MainScreen(deliveryViewModel, driverStatusViewModel)
                 }
             }
         }
@@ -34,29 +34,29 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(viewModel: DeliveryViewModel) {
+fun MainScreen(deliveryViewModel: DeliveryViewModel, driverStatusViewModel: DriverStatusViewModel) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "main") {
         composable("main") {
-            MainMenu(viewModel,"김배달", navController)
+            MainMenu(deliveryViewModel,"김배달", navController)
         }
         composable("mobilityStatus") {
             MobilityStatus(navController)
         }
         composable("driverStatus") {
-            DriverStatus(navController)
+            DriverStatus(driverStatusViewModel, navController)
         }
         composable("deliveryStatus") {
-            DeliveryStatus(viewModel, navController)
+            DeliveryStatus(deliveryViewModel, navController)
         }
         composable("deliveryStatusDetail") {
-            DeliveryStatusDetail(viewModel, navController)
+            DeliveryStatusDetail(deliveryViewModel, navController)
         }
         composable("deliveryNavigation") {
-            DeliveryNavigation(viewModel, navController)
+            DeliveryNavigation(deliveryViewModel, navController)
         }
         composable("deliveryList") {
-            DeliveryList(viewModel, navController)
+            DeliveryList(deliveryViewModel, navController)
         }
     }
 }
@@ -65,6 +65,6 @@ fun MainScreen(viewModel: DeliveryViewModel) {
 @Composable
 fun Preview() {
     TwizyDeliveryAppTheme {
-        MainScreen(DeliveryViewModel())
+        MainScreen(DeliveryViewModel(), DriverStatusViewModel())
     }
 }
