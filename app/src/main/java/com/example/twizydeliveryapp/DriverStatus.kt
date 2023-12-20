@@ -173,28 +173,187 @@ fun DriverStatusBody(
 fun UIOnRating(
     data: DriverStatusViewModel.DriverData
 ) {
+    val textMeasurer = rememberTextMeasurer()
     Column(
         modifier = Modifier
             .padding(top = 150.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.breath_full),
-            contentDescription = "breath",
-            contentScale = ContentScale.Crop,
+        Button(
+            onClick = { /**/ },
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
-        )
-        Image(
-            painter = painterResource(id = R.drawable.heart_full),
-            contentDescription = "heart",
-            contentScale = ContentScale.Crop,
+                .height(240.dp),
+            border = mainMenuStroke,
+            colors = ButtonDefaults.buttonColors(containerColor = mainMenuButtonColor),
+            contentPadding = PaddingValues(all = 16.dp),
+            shape = MaterialTheme.shapes.extraSmall
+        ) {
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1.5f),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.breath),
+                            contentDescription = "breath"
+                        )
+                        Text(
+                            text = "분당 호흡수:",
+                            fontSize = smallMediumText,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        Text(
+                            text = "${data.rr}회",
+                            fontSize = mediumText
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.5f),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Text(text = "자세히 보기 ⊳", color = titleTextColor)
+                    }
+                }
+                Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+                    listOf(0, 10, 20, 30).forEach {
+                        drawText(
+                            textMeasurer = textMeasurer,
+                            style = TextStyle(color = titleTextColor, fontSize = smallMediumText),
+                            topLeft = Offset(
+                                0f,
+                                360f - it.toFloat() * 10
+                            ),
+                            text = it.toString()
+                        )
+                    }
+//                    val sizeArc = size / 1.75F
+//                    drawArc(
+//                        color = statusBlack,
+//                        startAngle = 0f,
+//                        sweepAngle = 360f,
+//                        useCenter = false,
+//                        topLeft = Offset(
+//                            (size.width - sizeArc.width) / 2f,
+//                            (size.height - sizeArc.height) / 2f
+//                        ),
+//                        size = sizeArc,
+//                        style = Stroke(width = 20f)
+//                    )
+//
+//                    drawArc(
+//                        color = statusBlue,
+//                        startAngle = -90f,
+//                        sweepAngle = 300f,
+//                        useCenter = false,
+//                        topLeft = Offset(
+//                            (size.width - sizeArc.width) / 2f,
+//                            (size.height - sizeArc.height) / 2f
+//                        ),
+//                        size = sizeArc,
+//                        style = Stroke(width = 20f, cap = StrokeCap.Round)
+//                    )
+                })
+            }
+        }
+        Button(
+            onClick = { /**/ },
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp)
                 .fillMaxWidth()
-        )
+                .height(240.dp),
+            border = mainMenuStroke,
+            colors = ButtonDefaults.buttonColors(containerColor = mainMenuButtonColor),
+            contentPadding = PaddingValues(all = 16.dp),
+            shape = MaterialTheme.shapes.extraSmall
+        ) {
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1.5f),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.heart),
+                            contentDescription = "breath"
+                        )
+                        Text(
+                            text = "분당 심박수:",
+                            fontSize = smallMediumText,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        Text(
+                            text = "${data.bpm} Bpm",
+                            fontSize = mediumText
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.5f),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Text(text = "자세히 보기 ⊳", color = titleTextColor)
+                    }
+                }
+                Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+                    listOf(80, 120, 160).forEach {
+                        drawText(
+                            textMeasurer = textMeasurer,
+                            style = TextStyle(color = titleTextColor, fontSize = smallMediumText),
+                            topLeft = Offset(
+                                0f,
+                                500f - it * 2.5f
+                            ),
+                            text = it.toString()
+                        )
+                    }
+//                    val sizeArc = size / 1.75F
+//                    drawArc(
+//                        color = statusBlack,
+//                        startAngle = 0f,
+//                        sweepAngle = 360f,
+//                        useCenter = false,
+//                        topLeft = Offset(
+//                            (size.width - sizeArc.width) / 2f,
+//                            (size.height - sizeArc.height) / 2f
+//                        ),
+//                        size = sizeArc,
+//                        style = Stroke(width = 20f)
+//                    )
+//
+//                    drawArc(
+//                        color = statusBlue,
+//                        startAngle = -90f,
+//                        sweepAngle = 300f,
+//                        useCenter = false,
+//                        topLeft = Offset(
+//                            (size.width - sizeArc.width) / 2f,
+//                            (size.height - sizeArc.height) / 2f
+//                        ),
+//                        size = sizeArc,
+//                        style = Stroke(width = 20f, cap = StrokeCap.Round)
+//                    )
+                })
+            }
+        }
     }
 }
 
@@ -279,9 +438,21 @@ fun UIOnNotRating(
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Text(text = data.heartRateLevel.toString(), color = titleTextColor, fontSize = smallText)
-                    Text(text = data.respiratoryLevel.toString(), color = titleTextColor, fontSize = smallText)
-                    Text(text = data.movementScore.toString(), color = titleTextColor, fontSize = smallText)
+                    Text(
+                        text = data.heartRateLevel.toString(),
+                        color = titleTextColor,
+                        fontSize = smallText
+                    )
+                    Text(
+                        text = data.respiratoryLevel.toString(),
+                        color = titleTextColor,
+                        fontSize = smallText
+                    )
+                    Text(
+                        text = data.movementScore.toString(),
+                        color = titleTextColor,
+                        fontSize = smallText
+                    )
                 }
             }
         }
