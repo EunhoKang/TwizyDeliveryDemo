@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
@@ -169,6 +170,7 @@ fun DriverStatusBody(
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun UIOnRating(
     data: DriverStatusViewModel.DriverData
@@ -213,7 +215,7 @@ fun UIOnRating(
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
                         Text(
-                            text = "${data.rr}회",
+                            text = "${if (data.rr.isEmpty()) 0 else data.rr.last()} 회",
                             fontSize = mediumText
                         )
                     }
@@ -236,6 +238,14 @@ fun UIOnRating(
                                 360f - it.toFloat() * 10
                             ),
                             text = it.toString()
+                        )
+                    }
+                    data.rr.forEach {
+                        drawCircle(
+                            color = textColor,
+                            radius = 10f,
+                            center = Offset(80f, 0f),
+                            style = Fill
                         )
                     }
 //                    val sizeArc = size / 1.75F
@@ -300,7 +310,7 @@ fun UIOnRating(
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
                         Text(
-                            text = "${data.bpm} Bpm",
+                            text = "${if (data.bpm.isEmpty()) 0 else data.bpm.last()} Bpm",
                             fontSize = mediumText
                         )
                     }
