@@ -182,6 +182,7 @@ fun UIOnRating(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val xPoints = listOf(800f, 640f, 480f, 320f, 160f)
         Button(
             onClick = { /**/ },
             modifier = Modifier
@@ -240,40 +241,29 @@ fun UIOnRating(
                             text = it.toString()
                         )
                     }
-                    data.rr.forEach {
+                    var targets = data.rr.takeLast(5)
+                    while (targets.size < 5) {
+                        targets = listOf(0).plus(targets)
+                    }
+                    targets = targets.reversed()
+                    targets.forEachIndexed { idx, it ->
                         drawCircle(
                             color = textColor,
                             radius = 10f,
-                            center = Offset(80f, 0f),
-                            style = Fill
+                            center = Offset(xPoints[idx], 400f - it.toFloat() * 10)
                         )
+                        if (idx != targets.size - 1) {
+                            drawLine(
+                                color = textColor,
+                                start = Offset(xPoints[idx], 400f - it.toFloat() * 10),
+                                end = Offset(
+                                    xPoints[idx + 1],
+                                    400f - targets[idx + 1].toFloat() * 10
+                                ),
+                                strokeWidth = 5f
+                            )
+                        }
                     }
-//                    val sizeArc = size / 1.75F
-//                    drawArc(
-//                        color = statusBlack,
-//                        startAngle = 0f,
-//                        sweepAngle = 360f,
-//                        useCenter = false,
-//                        topLeft = Offset(
-//                            (size.width - sizeArc.width) / 2f,
-//                            (size.height - sizeArc.height) / 2f
-//                        ),
-//                        size = sizeArc,
-//                        style = Stroke(width = 20f)
-//                    )
-//
-//                    drawArc(
-//                        color = statusBlue,
-//                        startAngle = -90f,
-//                        sweepAngle = 300f,
-//                        useCenter = false,
-//                        topLeft = Offset(
-//                            (size.width - sizeArc.width) / 2f,
-//                            (size.height - sizeArc.height) / 2f
-//                        ),
-//                        size = sizeArc,
-//                        style = Stroke(width = 20f, cap = StrokeCap.Round)
-//                    )
                 })
             }
         }
@@ -335,32 +325,29 @@ fun UIOnRating(
                             text = it.toString()
                         )
                     }
-//                    val sizeArc = size / 1.75F
-//                    drawArc(
-//                        color = statusBlack,
-//                        startAngle = 0f,
-//                        sweepAngle = 360f,
-//                        useCenter = false,
-//                        topLeft = Offset(
-//                            (size.width - sizeArc.width) / 2f,
-//                            (size.height - sizeArc.height) / 2f
-//                        ),
-//                        size = sizeArc,
-//                        style = Stroke(width = 20f)
-//                    )
-//
-//                    drawArc(
-//                        color = statusBlue,
-//                        startAngle = -90f,
-//                        sweepAngle = 300f,
-//                        useCenter = false,
-//                        topLeft = Offset(
-//                            (size.width - sizeArc.width) / 2f,
-//                            (size.height - sizeArc.height) / 2f
-//                        ),
-//                        size = sizeArc,
-//                        style = Stroke(width = 20f, cap = StrokeCap.Round)
-//                    )
+                    var targets = data.rr.takeLast(5)
+                    while (targets.size < 5) {
+                        targets = listOf(80).plus(targets)
+                    }
+                    targets = targets.reversed()
+                    targets.forEachIndexed { idx, it ->
+                        drawCircle(
+                            color = textColor,
+                            radius = 10f,
+                            center = Offset(xPoints[idx], 540f - it * 2.5f)
+                        )
+                        if (idx != targets.size - 1) {
+                            drawLine(
+                                color = textColor,
+                                start = Offset(xPoints[idx], 540f - it * 2.5f),
+                                end = Offset(
+                                    xPoints[idx + 1],
+                                    540f - targets[idx + 1] * 2.5f
+                                ),
+                                strokeWidth = 5f
+                            )
+                        }
+                    }
                 })
             }
         }
