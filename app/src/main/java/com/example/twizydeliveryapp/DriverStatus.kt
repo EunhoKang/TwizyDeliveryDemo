@@ -2,31 +2,43 @@ package com.example.twizydeliveryapp
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -34,6 +46,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -48,7 +61,7 @@ fun DriverStatus(viewModel: DriverStatusViewModel, navController: NavController)
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DriverStatusHeader(navController)
-        DriverStatusBody()
+        DriverStatusBody(viewModel)
     }
     Column(
         modifier = Modifier
@@ -91,8 +104,11 @@ fun DriverStatusHeader(navController: NavController) {
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun DriverStatusBody() {
+fun DriverStatusBody(
+    viewModel: DriverStatusViewModel
+) {
     val textMeasurer = rememberTextMeasurer()
+    val data = viewModel.currentState.collectAsState()
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
         Canvas(
             modifier = Modifier.size(width = 320.dp, height = 320.dp),
@@ -110,98 +126,164 @@ fun DriverStatusBody() {
                     size = sizeArc,
                     style = Stroke(width = 20f, cap = StrokeCap.Round)
                 )
+                if (data.value.movementScore >= 100) {
+                    drawArc(
+                        brush = Brush.linearGradient(
+                            colors = listOf(gradiantGreenFirst, gradiantGreenSecond),
+                            start = Offset.Zero,
+                            end = Offset.Infinite,
+                        ),
+                        startAngle = -170f,
+                        sweepAngle = 120f,
+                        useCenter = false,
+                        topLeft = Offset(
+                            (size.width - sizeArc.width) / 2f,
+                            (size.height - sizeArc.height) / 2f - 50
+                        ),
+                        size = sizeArc,
+                        style = Stroke(width = 20f, cap = StrokeCap.Round)
+                    )
 
-                drawArc(
-                    brush = Brush.linearGradient(
-                        colors = listOf(gradiantGreenFirst, gradiantGreenSecond),
-                        start = Offset.Zero,
-                        end = Offset.Infinite,
-                    ),
-                    startAngle = -170f,
-                    sweepAngle = 120f,
-                    useCenter = false,
-                    topLeft = Offset(
-                        (size.width - sizeArc.width) / 2f,
-                        (size.height - sizeArc.height) / 2f - 50
-                    ),
-                    size = sizeArc,
-                    style = Stroke(width = 20f, cap = StrokeCap.Round)
-                )
-
-                drawText(
-                    textMeasurer = textMeasurer,
-                    style = TextStyle(color = titleTextColor, fontSize = smallText),
-                    topLeft = Offset(
-                        (size.width - sizeArc.width / 5f * 2f) / 2f,
-                        (size.height - sizeArc.height / 2f) / 2f - 75
-                    ),
-                    text = "운전자 주의 수준"
-                )
+                    drawText(
+                        textMeasurer = textMeasurer,
+                        style = TextStyle(color = titleTextColor, fontSize = smallText),
+                        topLeft = Offset(
+                            (size.width - sizeArc.width / 5f * 2f) / 2f,
+                            (size.height - sizeArc.height / 2f) / 2f - 75
+                        ),
+                        text = "운전자 주의 수준"
+                    )
+                }
 
                 drawText(
                     textMeasurer = textMeasurer,
                     style = TextStyle(color = textColor, fontSize = bigText),
                     topLeft = Offset(
-                        (size.width - sizeArc.width / 5f * 1f) / 2f,
+                        (size.width - sizeArc.width / 5f * 1f) / 2f - if (data.value.movementScore >= 100) 0 else 120,
                         (size.height - sizeArc.height / 7f * 2f) / 2f - 75
                     ),
-                    text = "좋음"
+                    text = if (data.value.movementScore >= 100) "좋음" else "측정 중입니다"
                 )
             })
-        Column(
-            modifier = Modifier
-                .padding(top = 150.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.breath_full),
-                contentDescription = "breath",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth()
-            )
-            Image(
-                painter = painterResource(id = R.drawable.heart_full),
-                contentDescription = "heart",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .fillMaxWidth()
-            )
-        }
+        if (data.value.movementScore >= 100) UIOnRating(data.value) else UIOnNotRating(data.value)
     }
 }
 
 @Composable
-fun TitleAndDescriptionWithIconVertical(title: String, description: String, icon: Int) {
+fun UIOnRating(
+    data: DriverStatusViewModel.DriverData
+) {
     Column(
-        modifier = Modifier.padding(horizontal = 16.dp),
+        modifier = Modifier
+            .padding(top = 150.dp)
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = title,
-            color = titleTextColor,
-            fontSize = smallText,
-            modifier = Modifier.padding(bottom = 16.dp)
+        Image(
+            painter = painterResource(id = R.drawable.breath_full),
+            contentDescription = "breath",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = icon),
-                contentDescription = "breath",
+        Image(
+            painter = painterResource(id = R.drawable.heart_full),
+            contentDescription = "heart",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun UIOnNotRating(
+    data: DriverStatusViewModel.DriverData
+) {
+    Button(
+        onClick = { /**/ },
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .padding(top = 150.dp)
+            .fillMaxWidth()
+            .height(240.dp),
+        border = mainMenuStroke,
+        colors = ButtonDefaults.buttonColors(containerColor = mainMenuButtonColor),
+        contentPadding = PaddingValues(all = 0.dp),
+        shape = MaterialTheme.shapes.extraSmall
+    ) {
+        Column {
+            Row(
                 modifier = Modifier
-                    .size(width = 18.dp, height = 18.dp),
-                tint = textColor
-            )
-            Text(
-                text = description,
-                color = textColor,
-                fontSize = bigText,
-                modifier = Modifier.padding(start = 8.dp)
-            )
+                    .padding(horizontal = 16.dp)
+                    .height(100.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.breath),
+                        contentDescription = "breath"
+                    )
+                    Text(text = "분당 호흡수", fontSize = smallMediumText)
+                    Text(
+                        text = "-",
+                        fontSize = bigText,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.heart),
+                        contentDescription = "heart"
+                    )
+                    Text(text = "분당 심박수", fontSize = smallMediumText)
+                    Text(
+                        text = "-",
+                        fontSize = bigText,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+            }
+            Divider(modifier = Modifier.padding(bottom = 16.dp), color = titleTextColor)
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .height(100.dp),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1.1f),
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Text(text = "심박 수준", fontSize = smallText)
+                    Text(text = "호흡 수준", fontSize = smallText)
+                    Text(text = "Movement Score", fontSize = smallText)
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.9f),
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Text(text = data.heartRateLevel.toString(), color = titleTextColor, fontSize = smallText)
+                    Text(text = data.respiratoryLevel.toString(), color = titleTextColor, fontSize = smallText)
+                    Text(text = data.movementScore.toString(), color = titleTextColor, fontSize = smallText)
+                }
+            }
         }
     }
 }
