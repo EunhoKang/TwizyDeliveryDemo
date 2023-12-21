@@ -11,7 +11,7 @@ class DriverStatusViewModel : ViewModel() {
         val bpm: List<Int> = listOf(), //분당 심박수
         val heartRateLevel: Int = 0, //심박 수준
         val respiratoryLevel: Int = 0, //호흡 수준
-        val movementScore: Int = 100
+        val movementScore: Int = 0
     )
 
     private var _currentState = MutableStateFlow(DriverData())

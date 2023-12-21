@@ -1,8 +1,6 @@
 package com.example.twizydeliveryapp
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,11 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -31,15 +27,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -47,7 +41,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -246,30 +239,55 @@ fun UIOnRating(
                         targets = listOf(0).plus(targets)
                     }
                     targets = targets.reversed()
-                    drawCircle(
-                        color = textColor,
-                        alpha = 0.5f,
-                        radius = 20f,
-                        center = Offset(xPoints.first(), 400f - targets.first() * 10)
+                    val botY = 440f
+                    val topY = 60f
+                    val startX = xPoints.last()
+                    val gradientColors = listOf(statusBlue, Color.Transparent)
+                    val gradientBrush = Brush.linearGradient(
+                        colors = gradientColors,
+                        start = Offset(startX, topY),
+                        end = Offset(startX, botY),
+                        tileMode = TileMode.Clamp
+                    )
+                    drawRect(
+                        brush = gradientBrush,
+                        topLeft = Offset(160f, topY),
+                        size = Size(640f, botY - topY)
                     )
                     targets.forEachIndexed { idx, it ->
-                        drawCircle(
-                            color = textColor,
-                            radius = 10f,
-                            center = Offset(xPoints[idx], 400f - it.toFloat() * 10)
-                        )
                         if (idx != targets.size - 1) {
+                            val path = Path()
+                            path.moveTo(xPoints[idx] + 1, topY - 1) // Move to the top-left corner
+                            path.lineTo(xPoints[idx + 1] - 1, topY - 1) // Draw top side
+                            path.lineTo(xPoints[idx + 1], 400f - targets[idx + 1] * 10f) // Draw right side
+                            path.lineTo(xPoints[idx], 400f - targets[idx] * 10f) // Draw left side
+                            path.close()
+                            drawPath(
+                                path = path,
+                                color = mainMenuButtonColor
+                            )
                             drawLine(
                                 color = textColor,
-                                start = Offset(xPoints[idx], 400f - it.toFloat() * 10),
+                                start = Offset(xPoints[idx], 400f - it * 10f),
                                 end = Offset(
                                     xPoints[idx + 1],
-                                    400f - targets[idx + 1].toFloat() * 10
+                                    400f - targets[idx + 1] * 10f
                                 ),
                                 strokeWidth = 5f
                             )
                         }
+                        drawCircle(
+                            color = textColor,
+                            radius = 10f,
+                            center = Offset(xPoints[idx], 400f - it * 10f)
+                        )
                     }
+                    drawCircle(
+                        color = textColor,
+                        alpha = 0.5f,
+                        radius = 20f,
+                        center = Offset(xPoints.first(), 400f - targets.first() * 10f)
+                    )
                 })
             }
         }
@@ -331,24 +349,38 @@ fun UIOnRating(
                             text = it.toString()
                         )
                     }
-                    var targets = data.rr.takeLast(5)
+                    var targets = data.bpm.takeLast(5)
                     while (targets.size < 5) {
                         targets = listOf(80).plus(targets)
                     }
                     targets = targets.reversed()
-                    drawCircle(
-                        color = textColor,
-                        alpha = 0.5f,
-                        radius = 20f,
-                        center = Offset(xPoints.first(), 540f - targets.first() * 2.5f)
+                    val botY = 380f
+                    val topY = 100f
+                    val startX = xPoints.last()
+                    val gradientColors = listOf(statusBlue, Color.Transparent)
+                    val gradientBrush = Brush.linearGradient(
+                        colors = gradientColors,
+                        start = Offset(startX, topY),
+                        end = Offset(startX, botY),
+                        tileMode = TileMode.Clamp
+                    )
+                    drawRect(
+                        brush = gradientBrush,
+                        topLeft = Offset(160f, topY),
+                        size = Size(640f, botY - topY)
                     )
                     targets.forEachIndexed { idx, it ->
-                        drawCircle(
-                            color = textColor,
-                            radius = 10f,
-                            center = Offset(xPoints[idx], 540f - it * 2.5f)
-                        )
                         if (idx != targets.size - 1) {
+                            val path = Path()
+                            path.moveTo(xPoints[idx] + 1, topY - 1) // Move to the top-left corner
+                            path.lineTo(xPoints[idx + 1] - 1, topY - 1) // Draw top side
+                            path.lineTo(xPoints[idx + 1], 540f - targets[idx + 1] * 2.5f) // Draw right side
+                            path.lineTo(xPoints[idx], 540f - targets[idx] * 2.5f) // Draw left side
+                            path.close()
+                            drawPath(
+                                path = path,
+                                color = mainMenuButtonColor
+                            )
                             drawLine(
                                 color = textColor,
                                 start = Offset(xPoints[idx], 540f - it * 2.5f),
@@ -359,7 +391,18 @@ fun UIOnRating(
                                 strokeWidth = 5f
                             )
                         }
+                        drawCircle(
+                            color = textColor,
+                            radius = 10f,
+                            center = Offset(xPoints[idx], 540f - it * 2.5f)
+                        )
                     }
+                    drawCircle(
+                        color = textColor,
+                        alpha = 0.5f,
+                        radius = 20f,
+                        center = Offset(xPoints.first(), 540f - targets.first() * 2.5f)
+                    )
                 })
             }
         }
