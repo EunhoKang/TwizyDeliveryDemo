@@ -1,6 +1,7 @@
 package com.example.twizydeliveryapp
 
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -15,4 +16,15 @@ class DriverStatusViewModel : ViewModel() {
 
     private var _currentState = MutableStateFlow(DriverData())
     val currentState : StateFlow<DriverData> = _currentState
+
+    suspend fun startLoop() {
+        while (true) {
+            delay(3000)
+            getData()
+        }
+    }
+
+    private fun getData() {
+        // TODO : Update DriverData
+    }
 }
