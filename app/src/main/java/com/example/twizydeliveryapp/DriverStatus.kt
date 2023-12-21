@@ -246,6 +246,12 @@ fun UIOnRating(
                         targets = listOf(0).plus(targets)
                     }
                     targets = targets.reversed()
+                    drawCircle(
+                        color = textColor,
+                        alpha = 0.5f,
+                        radius = 20f,
+                        center = Offset(xPoints.first(), 400f - targets.first() * 10)
+                    )
                     targets.forEachIndexed { idx, it ->
                         drawCircle(
                             color = textColor,
@@ -330,6 +336,12 @@ fun UIOnRating(
                         targets = listOf(80).plus(targets)
                     }
                     targets = targets.reversed()
+                    drawCircle(
+                        color = textColor,
+                        alpha = 0.5f,
+                        radius = 20f,
+                        center = Offset(xPoints.first(), 540f - targets.first() * 2.5f)
+                    )
                     targets.forEachIndexed { idx, it ->
                         drawCircle(
                             color = textColor,
