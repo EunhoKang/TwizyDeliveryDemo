@@ -338,7 +338,7 @@ fun UIOnRating(
                     }
                 }
                 Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
-                    listOf(80, 120, 160).forEach {
+                    listOf(40, 80, 120).forEach {
                         drawText(
                             textMeasurer = textMeasurer,
                             style = TextStyle(color = titleTextColor, fontSize = smallMediumText),
@@ -374,8 +374,8 @@ fun UIOnRating(
                             val path = Path()
                             path.moveTo(xPoints[idx] + 1, topY - 1) // Move to the top-left corner
                             path.lineTo(xPoints[idx + 1] - 1, topY - 1) // Draw top side
-                            path.lineTo(xPoints[idx + 1], 540f - targets[idx + 1] * 2.5f) // Draw right side
-                            path.lineTo(xPoints[idx], 540f - targets[idx] * 2.5f) // Draw left side
+                            path.lineTo(xPoints[idx + 1], 500f - targets[idx + 1] * 2.5f) // Draw right side
+                            path.lineTo(xPoints[idx], 500f - targets[idx] * 2.5f) // Draw left side
                             path.close()
                             drawPath(
                                 path = path,
@@ -383,7 +383,7 @@ fun UIOnRating(
                             )
                             drawLine(
                                 color = textColor,
-                                start = Offset(xPoints[idx], 540f - it * 2.5f),
+                                start = Offset(xPoints[idx], 500f - it * 2.5f),
                                 end = Offset(
                                     xPoints[idx + 1],
                                     540f - targets[idx + 1] * 2.5f
@@ -394,14 +394,14 @@ fun UIOnRating(
                         drawCircle(
                             color = textColor,
                             radius = 10f,
-                            center = Offset(xPoints[idx], 540f - it * 2.5f)
+                            center = Offset(xPoints[idx], 500f - it * 2.5f)
                         )
                     }
                     drawCircle(
                         color = textColor,
                         alpha = 0.5f,
                         radius = 20f,
-                        center = Offset(xPoints.first(), 540f - targets.first() * 2.5f)
+                        center = Offset(xPoints.first(), 500f - targets.first() * 2.5f)
                     )
                 })
             }
