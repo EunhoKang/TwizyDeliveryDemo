@@ -35,14 +35,18 @@ class DriverStatusViewModel : ViewModel() {
     }
 
     private suspend fun getData() {
-        val data = XandarAPI.xandarAPI.getInfo()
-        val values = data.body()?.split('/') ?: return
-        _currentState.value = DriverData(
-            _currentState.value.rr.drop(1).plus(values[1].toInt()),
-            _currentState.value.bpm.drop(1).plus(values[0].toInt()),
-            values[2].toInt(),
-            values[3].toInt(),
-            values[4].toInt()
-        )
+        try {
+            val data = XandarAPI.xandarAPI.getInfo()
+            val values = data.body()?.split('/') ?: return
+            _currentState.value = DriverData(
+                _currentState.value.rr.drop(1).plus(values[1].toInt()),
+                _currentState.value.bpm.drop(1).plus(values[0].toInt()),
+                values[2].toInt(),
+                values[3].toInt(),
+                values[4].toInt()
+            )
+        } catch (e: Exception) {
+            Log.e("Not Connected", "Server Offline : $e")
+        }
     }
 }
