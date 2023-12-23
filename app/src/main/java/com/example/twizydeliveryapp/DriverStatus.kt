@@ -181,7 +181,7 @@ fun UIOnRating(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
-                .height(240.dp),
+                .height(220.dp),
             border = mainMenuStroke,
             colors = ButtonDefaults.buttonColors(containerColor = mainMenuButtonColor),
             contentPadding = PaddingValues(all = 16.dp),
@@ -195,7 +195,7 @@ fun UIOnRating(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1.5f),
+                            .weight(1.4f),
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -216,20 +216,20 @@ fun UIOnRating(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(0.5f),
+                            .weight(0.6f),
                         horizontalArrangement = Arrangement.End
                     ) {
                         Text(text = "자세히 보기 ⊳", color = titleTextColor)
                     }
                 }
                 Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
-                    listOf(0, 10, 20, 30).forEach {
+                    listOf(0, 5, 10, 15).forEach {
                         drawText(
                             textMeasurer = textMeasurer,
                             style = TextStyle(color = titleTextColor, fontSize = smallMediumText),
                             topLeft = Offset(
                                 0f,
-                                360f - it.toFloat() * 10
+                                360f - it.toFloat() * 20
                             ),
                             text = it.toString()
                         )
@@ -239,8 +239,8 @@ fun UIOnRating(
                         targets = listOf(0).plus(targets)
                     }
                     targets = targets.reversed()
-                    val botY = 440f
-                    val topY = 60f
+                    val botY = 460f
+                    val topY = 40f
                     val startX = xPoints.last()
                     val gradientColors = listOf(statusBlue, Color.Transparent)
                     val gradientBrush = Brush.linearGradient(
@@ -259,8 +259,8 @@ fun UIOnRating(
                             val path = Path()
                             path.moveTo(xPoints[idx] + 1, topY - 1) // Move to the top-left corner
                             path.lineTo(xPoints[idx + 1] - 1, topY - 1) // Draw top side
-                            path.lineTo(xPoints[idx + 1], 400f - targets[idx + 1] * 10f) // Draw right side
-                            path.lineTo(xPoints[idx], 400f - targets[idx] * 10f) // Draw left side
+                            path.lineTo(xPoints[idx + 1], 390f - targets[idx + 1] * 20f) // Draw right side
+                            path.lineTo(xPoints[idx], 390f - targets[idx] * 20f) // Draw left side
                             path.close()
                             drawPath(
                                 path = path,
@@ -268,10 +268,10 @@ fun UIOnRating(
                             )
                             drawLine(
                                 color = textColor,
-                                start = Offset(xPoints[idx], 400f - it * 10f),
+                                start = Offset(xPoints[idx], 390f - it * 20f),
                                 end = Offset(
                                     xPoints[idx + 1],
-                                    400f - targets[idx + 1] * 10f
+                                    390f - targets[idx + 1] * 20f
                                 ),
                                 strokeWidth = 5f
                             )
@@ -279,14 +279,14 @@ fun UIOnRating(
                         drawCircle(
                             color = textColor,
                             radius = 10f,
-                            center = Offset(xPoints[idx], 400f - it * 10f)
+                            center = Offset(xPoints[idx], 390f - it * 20f)
                         )
                     }
                     drawCircle(
                         color = textColor,
                         alpha = 0.5f,
                         radius = 20f,
-                        center = Offset(xPoints.first(), 400f - targets.first() * 10f)
+                        center = Offset(xPoints.first(), 390f - targets.first() * 20f)
                     )
                 })
             }
@@ -296,7 +296,7 @@ fun UIOnRating(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 16.dp)
                 .fillMaxWidth()
-                .height(240.dp),
+                .height(220.dp),
             border = mainMenuStroke,
             colors = ButtonDefaults.buttonColors(containerColor = mainMenuButtonColor),
             contentPadding = PaddingValues(all = 16.dp),
@@ -310,7 +310,7 @@ fun UIOnRating(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1.5f),
+                            .weight(1.4f),
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -331,20 +331,20 @@ fun UIOnRating(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(0.5f),
+                            .weight(0.6f),
                         horizontalArrangement = Arrangement.End
                     ) {
                         Text(text = "자세히 보기 ⊳", color = titleTextColor)
                     }
                 }
                 Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
-                    listOf(40, 80, 120).forEach {
+                    listOf(0, 40, 80, 120).forEach {
                         drawText(
                             textMeasurer = textMeasurer,
                             style = TextStyle(color = titleTextColor, fontSize = smallMediumText),
                             topLeft = Offset(
                                 0f,
-                                500f - it * 2.5f
+                                340f - it * 2.5f
                             ),
                             text = it.toString()
                         )
@@ -354,8 +354,8 @@ fun UIOnRating(
                         targets = listOf(80).plus(targets)
                     }
                     targets = targets.reversed()
-                    val botY = 380f
-                    val topY = 100f
+                    val botY = 460f
+                    val topY = 40f
                     val startX = xPoints.last()
                     val gradientColors = listOf(statusBlue, Color.Transparent)
                     val gradientBrush = Brush.linearGradient(
@@ -374,8 +374,8 @@ fun UIOnRating(
                             val path = Path()
                             path.moveTo(xPoints[idx] + 1, topY - 1) // Move to the top-left corner
                             path.lineTo(xPoints[idx + 1] - 1, topY - 1) // Draw top side
-                            path.lineTo(xPoints[idx + 1], 500f - targets[idx + 1] * 2.5f) // Draw right side
-                            path.lineTo(xPoints[idx], 500f - targets[idx] * 2.5f) // Draw left side
+                            path.lineTo(xPoints[idx + 1], 370f - targets[idx + 1] * 2.5f) // Draw right side
+                            path.lineTo(xPoints[idx], 370f - targets[idx] * 2.5f) // Draw left side
                             path.close()
                             drawPath(
                                 path = path,
@@ -383,10 +383,10 @@ fun UIOnRating(
                             )
                             drawLine(
                                 color = textColor,
-                                start = Offset(xPoints[idx], 500f - it * 2.5f),
+                                start = Offset(xPoints[idx], 370f - it * 2.5f),
                                 end = Offset(
                                     xPoints[idx + 1],
-                                    540f - targets[idx + 1] * 2.5f
+                                    370f - targets[idx + 1] * 2.5f
                                 ),
                                 strokeWidth = 5f
                             )
@@ -394,14 +394,14 @@ fun UIOnRating(
                         drawCircle(
                             color = textColor,
                             radius = 10f,
-                            center = Offset(xPoints[idx], 500f - it * 2.5f)
+                            center = Offset(xPoints[idx], 370f - it * 2.5f)
                         )
                     }
                     drawCircle(
                         color = textColor,
                         alpha = 0.5f,
                         radius = 20f,
-                        center = Offset(xPoints.first(), 500f - targets.first() * 2.5f)
+                        center = Offset(xPoints.first(), 370f - targets.first() * 2.5f)
                     )
                 })
             }
